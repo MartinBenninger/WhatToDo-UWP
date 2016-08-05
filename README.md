@@ -1,4 +1,4 @@
-# UWP-Tasks
-Tasks app for the Universal Windows Platform integrated with Google Tasks.
+# WhatToDo UWP
+WhatToDo is a tasks app integrated with Google Tasks.
 
-The app should work on Desktop and Mobile.
+This repository is for the Universal Windows Platform app that will run on Windows 10 and Windows 10 Mobile.
