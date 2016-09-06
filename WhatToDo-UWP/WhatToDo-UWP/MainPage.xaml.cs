@@ -25,6 +25,5 @@ namespace WhatToDo_UWP
         public MainPage()
         {
             this.InitializeComponent();
-        }
     }
 }
