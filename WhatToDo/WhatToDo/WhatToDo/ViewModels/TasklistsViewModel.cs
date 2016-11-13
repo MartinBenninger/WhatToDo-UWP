@@ -7,13 +7,8 @@ using WhatToDo.Models;
 
 namespace WhatToDo.ViewModels
 {
-    public class TasklistsViewModel
+    public class TasklistsViewModel : BaseViewModel
     {
-        /// <summary>
-        /// The page title.
-        /// </summary>
-        public string Title { get; set; }
-
         /// <summary>
         /// A list of all tasklists.
         /// </summary>

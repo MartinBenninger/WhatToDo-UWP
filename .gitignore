@@ -250,4 +250,6 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
-WhatToDo/client_id.json
+
+# Ignore google "client_secret"
+WhatToDo/WhatToDo/WhatToDo/client_id.json
