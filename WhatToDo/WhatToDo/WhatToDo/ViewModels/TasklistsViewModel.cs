@@ -1,26 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WhatToDo.Models;
-
-namespace WhatToDo.ViewModels
+﻿namespace WhatToDo.ViewModels
 {
+    using System.Collections.Generic;
+    using Models;
+
+    /// <summary>
+    /// The view model for the task lists page.
+    /// </summary>
+    /// <seealso cref="WhatToDo.ViewModels.BaseViewModel"/>
     public class TasklistsViewModel : BaseViewModel
     {
         /// <summary>
-        /// A list of all tasklists.
-        /// </summary>
-        public List<Tasklist> Tasklists { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of TasklistsViewModel.
+        /// Initializes a new instance of the <see cref="TasklistsViewModel"/> class.
         /// </summary>
         public TasklistsViewModel()
         {
-            Title = "Lists";
-            Tasklists = new List<Tasklist>();
+            this.Title = "Lists";
+            this.Tasklists = new List<Tasklist>();
         }
+
+        /// <summary>
+        /// A list of all task lists.
+        /// </summary>
+        public List<Tasklist> Tasklists { get; set; }
     }
 }

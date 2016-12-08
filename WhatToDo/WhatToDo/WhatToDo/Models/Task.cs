@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WhatToDo.Models
+﻿namespace WhatToDo.Models
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
-    /// Represents a task from google tasks.
+    /// Represents a task from Google tasks.
     /// </summary>
-    /// <see cref="https://developers.google.com/google-apps/tasks/v1/reference/tasks"/>
+    /// <see href="https://developers.google.com/google-apps/tasks/v1/reference/tasks"/>
     public class Task
     {
         /// <summary>
@@ -38,19 +35,17 @@ namespace WhatToDo.Models
         public string SelfLink { get; set; }
 
         /// <summary>
-        /// Parent task identifier. This field is omitted if it is a top-level task. This
-        /// field is read-only. Use the "move" method to move the task under a different
-        /// parent or to the top level.
+        /// Parent task identifier. This field is omitted if it is a top-level task. This field is
+        /// read-only. Use the "move" method to move the task under a different parent or to the top level.
         /// </summary>
         public string Parent { get; set; }
 
         /// <summary>
-        /// String indicating the position of the task among its sibling tasks under the
-        /// same parent task or at the top level. If this string is greater than another
-        /// task's corresponding position string according to lexicographical ordering, the
-        /// task is positioned after the other task under the same parent task (or at the
-        /// top level). This field is read-only. Use the "move" method to move the task to
-        /// another position.
+        /// String indicating the position of the task among its sibling tasks under the same parent
+        /// task or at the top level. If this string is greater than another task's corresponding
+        /// position string according to lexicographical ordering, the task is positioned after the
+        /// other task under the same parent task (or at the top level). This field is read-only. Use
+        /// the "move" method to move the task to another position.
         /// </summary>
         public string Position { get; set; }
 
@@ -70,8 +65,8 @@ namespace WhatToDo.Models
         public DateTime? Due { get; set; }
 
         /// <summary>
-        /// Completion date of the task (as System.DateTime from RFC 3339 timestamp).
-        /// This field is omitted if the task has not been completed.
+        /// Completion date of the task (as System.DateTime from RFC 3339 timestamp). This field is
+        /// omitted if the task has not been completed.
         /// </summary>
         public DateTime? Completed { get; set; }
 
@@ -81,9 +76,8 @@ namespace WhatToDo.Models
         public bool? Deleted { get; set; }
 
         /// <summary>
-        /// Flag indicating whether the task is hidden. This is the case if the task had
-        /// been marked completed when the task list was last cleared. The default is False.
-        /// This field is read-only.
+        /// Flag indicating whether the task is hidden. This is the case if the task had been marked
+        /// completed when the task list was last cleared. The default is False. This field is read-only.
         /// </summary>
         public bool? Hidden { get; set; }
 
@@ -103,7 +97,7 @@ namespace WhatToDo.Models
             public string Type { get; set; }
 
             /// <summary>
-            /// The description. In HTML speak: Everything between <a> and </a>.
+            /// The description. In HTML speak: Everything between <a>and</a>.
             /// </summary>
             public string Description { get; set; }
 

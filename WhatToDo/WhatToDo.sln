@@ -15,6 +15,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhatToDo.UWP", "WhatToDo\Wh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhatToDo.Windows", "WhatToDo\WhatToDo.Windows\WhatToDo.Windows.csproj", "{CC0229B7-4831-452D-A0E1-311B0D8295F3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{62A8211D-D32D-45B1-8C3D-158F30200FF3}"
+	ProjectSection(SolutionItems) = preProject
+		WhatToDo.sln.vsspell = WhatToDo.sln.vsspell
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU

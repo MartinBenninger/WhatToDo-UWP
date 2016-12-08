@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WhatToDo.Models
+﻿namespace WhatToDo.Models
 {
+    using System;
+
     /// <summary>
-    /// Represents a tasklist from google tasks.
+    /// Represents a task list from Google tasks.
     /// </summary>
-    /// <see cref="https://developers.google.com/google-apps/tasks/v1/reference/tasklists"/>
+    /// <see href="https://developers.google.com/google-apps/tasks/v1/reference/tasklists"/>
     public class Tasklist
     {
         /// <summary>

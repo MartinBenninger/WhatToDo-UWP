@@ -3,11 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="WhatToDo.Views.Welcome">
   <StackLayout>
-    <Label Text="{Binding Title}" FontSize="Large" FontAttributes="Bold" VerticalOptions="CenterAndExpand" HorizontalOptions="Center"/>
+    <Label Text="{Binding Title}" FontSize="Large" FontAttributes="Bold" VerticalOptions="CenterAndExpand" HorizontalOptions="Center" />
     <Label VerticalOptions="CenterAndExpand" HorizontalOptions="Center" Margin="20">
-Welcome to the WhatToDo app!
+      Welcome to the WhatToDo app!
 
-WhatToDo is a to-do list app that allows you to create and organize your tasks. The app syncs with Google Tasks so that your to-do lists are safe in the cloud. If you create a task with a due date, it will even show up in your Google calendar. To use this lovely application, please login with your Google account.
+      WhatToDo is a to-do list app that allows you to create and organize your tasks. The app synchronizes with Google Tasks so that your to-do lists are safe in the cloud. If you create a task with a due date, it will even show up in your Google calendar. To use this application, please login with your Google account.
     </Label>
     <Button Text="Login" VerticalOptions="CenterAndExpand" HorizontalOptions="Center" Clicked="OnLoginButtonClicked"></Button>
   </StackLayout>

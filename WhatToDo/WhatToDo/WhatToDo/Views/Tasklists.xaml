@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:WhatToDo;assembly=WhatToDo"
              x:Class="WhatToDo.Views.Tasklists">
   <StackLayout>
-    <Label Text="{Binding Title}" HorizontalTextAlignment="Center" FontSize="Large" FontAttributes="Bold"/>
+    <Label Text="{Binding Title}" HorizontalTextAlignment="Center" FontSize="Large" FontAttributes="Bold" />
     <ListView ItemsSource="{Binding Tasklists}">
       <ListView.ItemTemplate>
         <DataTemplate>
