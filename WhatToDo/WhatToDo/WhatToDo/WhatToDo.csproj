@@ -43,8 +43,13 @@
     <Compile Include="DAL\IRepositories\ITaskRepository.cs" />
     <Compile Include="DAL\Repositories\TasklistRepository.cs" />
     <Compile Include="DAL\Repositories\TaskRepository.cs" />
+    <Compile Include="Helpers\GoogleCredentialsHelper.cs" />
     <Compile Include="Helpers\IocConfig.cs" />
+    <Compile Include="Helpers\NavigationHelper.cs" />
+    <Compile Include="Helpers\ResourceLoader.cs" />
     <Compile Include="Helpers\Settings.cs" />
+    <Compile Include="Models\GoogleCredentials.cs" />
+    <Compile Include="Models\GoogleCredentialsRoot.cs" />
     <Compile Include="Models\Task.cs" />
     <Compile Include="Models\Tasklist.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -53,6 +58,7 @@
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\TasklistsViewModel.cs" />
     <Compile Include="Views\BaseContentPage.cs" />
+    <Compile Include="Views\Login.cs" />
     <Compile Include="Views\Tasklists.xaml.cs">
       <DependentUpon>Tasklists.xaml</DependentUpon>
     </Compile>
@@ -62,9 +68,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <Content Include="client_id.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <EmbeddedResource Include="client_id.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="WhatToDo.ruleset" />
   </ItemGroup>
@@ -167,7 +173,6 @@
     <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

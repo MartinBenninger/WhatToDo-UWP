@@ -28,7 +28,7 @@
             {
                 // Subscribe the login event for android because the OnAppearing event is not called
                 // after PopModalAsync.
-                MessagingCenter.Subscribe<Welcome>(this, "LoggedIn", (sender) => this.BindingContext = this.GetTasklistsViewModel());
+                MessagingCenter.Subscribe<App>(this, "LoggedIn", (sender) => this.BindingContext = this.GetTasklistsViewModel());
             }
         }
 

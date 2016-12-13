@@ -9,8 +9,10 @@ namespace WhatToDo.Helpers
     /// </summary>
     public static class Settings
     {
-        private const string TokenKey = "token";
-        private static readonly string TokenDefault = string.Empty;
+        private const string AccessTokenKey = "AccessToken";
+        private const string RefreshTokenKey = "RefreshToken";
+        private static readonly string AccessTokenDefault = string.Empty;
+        private static readonly string RefreshTokenDefault = string.Empty;
 
         /// <summary>
         /// Gets or sets the Google tasks API access token.
@@ -20,12 +22,29 @@ namespace WhatToDo.Helpers
         {
             get
             {
-                return AppSettings.GetValueOrDefault<string>(TokenKey, TokenDefault);
+                return AppSettings.GetValueOrDefault<string>(AccessTokenKey, AccessTokenDefault);
             }
 
             set
             {
-                AppSettings.AddOrUpdateValue<string>(TokenKey, value);
+                AppSettings.AddOrUpdateValue<string>(AccessTokenKey, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the Google tasks API refresh token.
+        /// </summary>
+        /// <value>The Google tasks API refresh token.</value>
+        public static string RefreshToken
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault<string>(RefreshTokenKey, RefreshTokenDefault);
+            }
+
+            set
+            {
+                AppSettings.AddOrUpdateValue<string>(RefreshTokenKey, value);
             }
         }
 
@@ -37,7 +56,7 @@ namespace WhatToDo.Helpers
         {
             get
             {
-                return !string.IsNullOrWhiteSpace(AccessToken);
+                return !string.IsNullOrWhiteSpace(RefreshToken);
             }
         }
 

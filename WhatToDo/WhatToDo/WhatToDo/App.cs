@@ -1,5 +1,6 @@
 ﻿namespace WhatToDo
 {
+    using System.Threading.Tasks;
     using DAL.IRepositories;
     using Helpers;
     using Views;
@@ -23,8 +24,11 @@
                 IocConfig.SetIoc();
             }
 
+            NavigationHelper.Current.NavigateLoginSuccess = this.LoginSuccess;
+            NavigationHelper.Current.NavigateLoginFailure = this.LoginFailure;
+
             // For testing and debugging
-            Settings.AccessToken = string.Empty;
+            Settings.RefreshToken = string.Empty;
 
             // The root page of your application
             this.MainPage = new NavigationPage(new Tasklists(Resolver.Resolve<ITasklistRepository>()));
@@ -57,6 +61,31 @@
         protected override void OnResume()
         {
             // Handle when your app resumes
+        }
+
+        /// <summary>
+        /// Method to call if the login was successful.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        private async Task LoginSuccess()
+        {
+            if (Device.OS == TargetPlatform.Android)
+            {
+                // Send the login event for android because the OnAppearing event is not called after PopModalAsync.
+                MessagingCenter.Send<App>(this, "LoggedIn");
+            }
+
+            await this.MainPage.Navigation.PopModalAsync();
+            await this.MainPage.Navigation.PopModalAsync();
+        }
+
+        /// <summary>
+        /// Method to call if the login failed or was canceled.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        private async Task LoginFailure()
+        {
+            await this.MainPage.Navigation.PopModalAsync();
         }
     }
 }

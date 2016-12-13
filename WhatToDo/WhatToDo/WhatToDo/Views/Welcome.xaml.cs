@@ -37,14 +37,7 @@
         /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
         private async void OnLoginButtonClicked(object sender, EventArgs args)
         {
-            Settings.AccessToken = "token";
-            await this.Navigation.PopModalAsync();
-
-            if (Device.OS == TargetPlatform.Android)
-            {
-                // Send the login event for android because the OnAppearing event is not called after PopModalAsync.
-                MessagingCenter.Send<Welcome>(this, "LoggedIn");
-            }
+            await this.Navigation.PushModalAsync(new Login());
         }
 
         /// <summary>
