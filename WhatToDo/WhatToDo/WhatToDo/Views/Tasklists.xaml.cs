@@ -1,5 +1,6 @@
 ﻿namespace WhatToDo.Views
 {
+    using System;
     using System.Collections.Generic;
     using DAL.IRepositories;
     using Google.Apis.Tasks.v1.Data;
@@ -15,16 +16,19 @@
     public partial class Tasklists : BaseContentPage
     {
         private readonly ITasklistRepository tasklistRepository;
+        private readonly IUserRepository userRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tasklists"/> class.
         /// </summary>
         /// <param name="tasklistRepository">The DI injected task list repository.</param>
-        public Tasklists(ITasklistRepository tasklistRepository)
+        /// <param name="userRepository">The DI injected user repository.</param>
+        public Tasklists(ITasklistRepository tasklistRepository, IUserRepository userRepository)
         {
             this.InitializeComponent();
 
             this.tasklistRepository = tasklistRepository;
+            this.userRepository = userRepository;
 
             if (Device.OS == TargetPlatform.Android)
             {
@@ -44,6 +48,13 @@
             base.OnAppearing();
 
             this.BindingContext = this.GetTasklistsViewModel();
+        }
+
+        private async void OnLogoutButtonClicked(object sender, EventArgs args)
+        {
+            await this.userRepository.Logout();
+
+            await this.Navigation.PushModalAsync(new Welcome());
         }
 
         /// <summary>

@@ -12,5 +12,6 @@
         </DataTemplate>
       </ListView.ItemTemplate>
     </ListView>
+    <Button Text="Logout" VerticalOptions="CenterAndExpand" HorizontalOptions="Center" Clicked="OnLogoutButtonClicked"></Button>
   </StackLayout>
 </local:Views.BaseContentPage>

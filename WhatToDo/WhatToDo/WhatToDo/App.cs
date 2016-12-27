@@ -32,7 +32,7 @@
             ////Settings.AccessToken = string.Empty;
 
             // The root page of your application
-            this.MainPage = new NavigationPage(new Tasklists(Resolver.Resolve<ITasklistRepository>()));
+            this.MainPage = new NavigationPage(new Tasklists(Resolver.Resolve<ITasklistRepository>(), Resolver.Resolve<IUserRepository>()));
         }
 
         /// <summary>

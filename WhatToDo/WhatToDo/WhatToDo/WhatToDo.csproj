@@ -41,8 +41,10 @@
     <Compile Include="App.cs" />
     <Compile Include="DAL\IRepositories\ITasklistRepository.cs" />
     <Compile Include="DAL\IRepositories\ITaskRepository.cs" />
+    <Compile Include="DAL\IRepositories\IUserRepository.cs" />
     <Compile Include="DAL\Repositories\TasklistRepository.cs" />
     <Compile Include="DAL\Repositories\TaskRepository.cs" />
+    <Compile Include="DAL\Repositories\UserRepository.cs" />
     <Compile Include="Helpers\GoogleCredentialsHelper.cs" />
     <Compile Include="Helpers\IocConfig.cs" />
     <Compile Include="Helpers\NavigationHelper.cs" />

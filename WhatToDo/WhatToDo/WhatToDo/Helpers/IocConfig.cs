@@ -18,6 +18,7 @@
 
             resolverContainer.Register<ITasklistRepository>(typeof(TasklistRepository));
             resolverContainer.Register<ITaskRepository>(typeof(TaskRepository));
+            resolverContainer.Register<IUserRepository>(typeof(UserRepository));
 
             Resolver.SetResolver(resolverContainer.GetResolver());
         }

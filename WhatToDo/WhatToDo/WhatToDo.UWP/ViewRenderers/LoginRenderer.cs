@@ -56,7 +56,8 @@ namespace WhatToDo.UWP.ViewRenderers
                 + "&redirect_uri=" + (this.googleCredentials.RedirectUris.FirstOrDefault() ?? string.Empty)
                 + "&response_type=code"
                 + "&scope=https://www.googleapis.com/auth/tasks"
-                + "&access_type=offline";
+                + "&access_type=offline"
+                + "&approval_prompt=force";
 
             var startUri = new Uri(googleUrl);
             var endUri = new Uri(this.googleCredentials.RedirectUris.FirstOrDefault() ?? string.Empty);
