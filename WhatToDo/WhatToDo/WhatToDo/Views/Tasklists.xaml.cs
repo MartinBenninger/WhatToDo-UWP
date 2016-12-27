@@ -1,6 +1,8 @@
 ﻿namespace WhatToDo.Views
 {
+    using System.Collections.Generic;
     using DAL.IRepositories;
+    using Google.Apis.Tasks.v1.Data;
     using Helpers;
     using Models;
     using ViewModels;
@@ -59,7 +61,7 @@
             }
 
             // Get all task lists.
-            viewModel.Tasklists = this.tasklistRepository.GetAllTasklists();
+            viewModel.Tasklists = System.Threading.Tasks.Task.Run(() => this.tasklistRepository.GetAllTasklists()).Result;
 
             return viewModel;
         }

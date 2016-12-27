@@ -1,7 +1,7 @@
 ﻿namespace WhatToDo.ViewModels
 {
     using System.Collections.Generic;
-    using Models;
+    using Google.Apis.Tasks.v1.Data;
 
     /// <summary>
     /// The view model for the task lists page.
@@ -15,12 +15,12 @@
         public TasklistsViewModel()
         {
             this.Title = "Lists";
-            this.Tasklists = new List<Tasklist>();
+            this.Tasklists = new List<TaskList>();
         }
 
         /// <summary>
         /// A list of all task lists.
         /// </summary>
-        public List<Tasklist> Tasklists { get; set; }
+        public List<TaskList> Tasklists { get; set; }
     }
 }

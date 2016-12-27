@@ -28,7 +28,8 @@
             NavigationHelper.Current.NavigateLoginFailure = this.LoginFailure;
 
             // For testing and debugging
-            Settings.RefreshToken = string.Empty;
+            ////Settings.RefreshToken = string.Empty;
+            ////Settings.AccessToken = string.Empty;
 
             // The root page of your application
             this.MainPage = new NavigationPage(new Tasklists(Resolver.Resolve<ITasklistRepository>()));

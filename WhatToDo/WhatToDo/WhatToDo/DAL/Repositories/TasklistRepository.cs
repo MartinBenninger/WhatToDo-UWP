@@ -2,8 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using Google.Apis.Tasks.v1.Data;
     using IRepositories;
     using Models;
+    using Services.TasksAPI;
 
     /// <summary>
     /// The task list repository class.
@@ -15,25 +17,27 @@
         /// Gets all task lists.
         /// </summary>
         /// <returns>A list of all task lists.</returns>
-        public List<Tasklist> GetAllTasklists()
+        public async System.Threading.Tasks.Task<List<TaskList>> GetAllTasklists()
         {
-            var tasklists = new List<Tasklist>();
+            ////var tasklists = new List<Tasklist>();
 
-            // Add fake model.
-            tasklists.Add(new Tasklist
-            {
-                Title = "First List"
-            });
-            tasklists.Add(new Tasklist
-            {
-                Title = "Second List"
-            });
-            tasklists.Add(new Tasklist
-            {
-                Title = "Third List"
-            });
+            ////// Add fake model.
+            ////tasklists.Add(new Tasklist
+            ////{
+            ////    Title = "First List"
+            ////});
+            ////tasklists.Add(new Tasklist
+            ////{
+            ////    Title = "Second List"
+            ////});
+            ////tasklists.Add(new Tasklist
+            ////{
+            ////    Title = "Third List"
+            ////});
 
-            return tasklists;
+            var onlineData = new OnlineData();
+
+            return await onlineData.GetAllTaskLists();
         }
     }
 }

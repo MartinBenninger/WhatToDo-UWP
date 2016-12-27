@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using WhatToDo.Helpers;
+using WhatToDo.Models;
 using WhatToDo.UWP.ViewRenderers;
 using WhatToDo.Views;
 using Windows.Security.Authentication.Web;
+using Windows.Web.Http;
 using Xamarin.Forms.Platform.UWP;
 
 [assembly: ExportRenderer(typeof(Login), typeof(LoginRenderer))]
@@ -19,6 +23,7 @@ namespace WhatToDo.UWP.ViewRenderers
     public class LoginRenderer : PageRenderer
     {
         private bool isShown = false;
+        private GoogleCredentials googleCredentials = GoogleCredentialsHelper.GetCredentials;
 
         protected override async void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -31,11 +36,11 @@ namespace WhatToDo.UWP.ViewRenderers
 
             isShown = true;
 
-            var code = await AuthenticateUsingWebAuthenticationBrocker();
+            var code = await GetAuthorizationCode();
 
             if (code != null)
             {
-                Settings.RefreshToken = code;
+                await GetTokenFromCode(code);
                 await NavigationHelper.Current.NavigateLoginSuccess();
             }
             else
@@ -44,23 +49,41 @@ namespace WhatToDo.UWP.ViewRenderers
             }
         }
 
-        private async Task<string> AuthenticateUsingWebAuthenticationBrocker()
+        private async System.Threading.Tasks.Task<string> GetAuthorizationCode()
         {
-            var googleCredentials = Helpers.GoogleCredentialsHelper.GetCredentials;
-            var googleUrl = googleCredentials.AuthUri
-                + "?client_id=" + googleCredentials.ClientId
-                + "&redirect_uri=" + (googleCredentials.RedirectUris.FirstOrDefault() ?? string.Empty)
+            var googleUrl = this.googleCredentials.AuthUri
+                + "?client_id=" + this.googleCredentials.ClientId
+                + "&redirect_uri=" + (this.googleCredentials.RedirectUris.FirstOrDefault() ?? string.Empty)
                 + "&response_type=code"
-                + "&scope=email";
+                + "&scope=https://www.googleapis.com/auth/tasks"
+                + "&access_type=offline";
 
             var startUri = new Uri(googleUrl);
-            var endUri = new Uri(googleCredentials.RedirectUris.FirstOrDefault() ?? string.Empty);
+            var endUri = new Uri(this.googleCredentials.RedirectUris.FirstOrDefault() ?? string.Empty);
 
             var webAuthenticationResult = await WebAuthenticationBroker.AuthenticateAsync(WebAuthenticationOptions.None, startUri, endUri);
 
             return webAuthenticationResult.ResponseStatus == WebAuthenticationStatus.Success ?
                 webAuthenticationResult.ResponseData.Substring(webAuthenticationResult.ResponseData.IndexOf('=') + 1) :
                 null;
+        }
+
+        private async System.Threading.Tasks.Task GetTokenFromCode(string code)
+        {
+            var httpClient = new HttpClient();
+            var content = new HttpFormUrlEncodedContent(new Dictionary<string, string>
+            {
+                { "code", code },
+                { "client_id", this.googleCredentials.ClientId },
+                { "client_secret", this.googleCredentials.ClientSecret },
+                { "redirect_uri", this.googleCredentials.RedirectUris.FirstOrDefault() ?? string.Empty },
+                { "grant_type", "authorization_code" }
+            });
+            var tokenResponse = await httpClient.PostAsync(new Uri(this.googleCredentials.TokenUri), content);
+            var responseDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(tokenResponse.Content.ToString());
+
+            Settings.RefreshToken = responseDictionary.ContainsKey("refresh_token") ? responseDictionary["refresh_token"] : string.Empty;
+            Settings.AccessToken = responseDictionary.ContainsKey("access_token") ? responseDictionary["access_token"] : string.Empty;
         }
     }
 }

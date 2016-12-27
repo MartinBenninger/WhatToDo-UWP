@@ -1,7 +1,7 @@
 ﻿namespace WhatToDo.DAL.IRepositories
 {
     using System.Collections.Generic;
-    using Models;
+    using Google.Apis.Tasks.v1.Data;
 
     /// <summary>
     /// The interface for the task list repository class.
@@ -12,6 +12,6 @@
         /// Gets all task lists.
         /// </summary>
         /// <returns>A list of all task lists.</returns>
-        List<Tasklist> GetAllTasklists();
+        System.Threading.Tasks.Task<List<TaskList>> GetAllTasklists();
     }
 }
