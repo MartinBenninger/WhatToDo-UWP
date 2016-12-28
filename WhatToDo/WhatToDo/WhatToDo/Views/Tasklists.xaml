@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<local:Views.BaseContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:WhatToDo;assembly=WhatToDo"
+             x:Class="WhatToDo.Views.Tasklists">
+  <StackLayout>
+    <Label Text="{Binding Title}" HorizontalTextAlignment="Center" FontSize="Large" FontAttributes="Bold" />
+    <ListView ItemsSource="{Binding TaskLists}" ItemTapped="OnTaskListItemTapped">
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <TextCell Text="{Binding Title}" />
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
+    <Button Text="Logout" VerticalOptions="CenterAndExpand" HorizontalOptions="Center" Clicked="OnLogoutButtonClicked"></Button>
+  </StackLayout>
+</local:Views.BaseContentPage>
