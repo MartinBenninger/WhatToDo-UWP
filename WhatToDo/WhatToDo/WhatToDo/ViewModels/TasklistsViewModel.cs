@@ -7,20 +7,20 @@
     /// The view model for the task lists page.
     /// </summary>
     /// <seealso cref="WhatToDo.ViewModels.BaseViewModel"/>
-    public class TasklistsViewModel : BaseViewModel
+    public class TaskListsViewModel : BaseViewModel
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TasklistsViewModel"/> class.
+        /// Initializes a new instance of the <see cref="TaskListsViewModel"/> class.
         /// </summary>
-        public TasklistsViewModel()
+        public TaskListsViewModel()
         {
-            this.Title = "Lists";
-            this.Tasklists = new List<TaskList>();
+            this.Title = "Task Lists";
+            this.TaskLists = new List<TaskList>();
         }
 
         /// <summary>
         /// A list of all task lists.
         /// </summary>
-        public List<TaskList> Tasklists { get; set; }
+        public List<TaskList> TaskLists { get; set; }
     }
 }

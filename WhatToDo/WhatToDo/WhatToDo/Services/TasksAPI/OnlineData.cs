@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
-    using System.Threading.Tasks;
     using Google.Apis.Auth.OAuth2;
     using Google.Apis.Services;
     using Google.Apis.Tasks.v1;
@@ -20,6 +19,7 @@
     public class OnlineData
     {
         private readonly string listsUrl = "https://www.googleapis.com/tasks/v1/users/@me/lists";
+        private readonly string tasksUrl = "https://www.googleapis.com/tasks/v1/lists/"; // + taskListId + "/tasks"
         private readonly string revokeTokenUrl = "https://accounts.google.com/o/oauth2/revoke";
 
         private readonly GoogleCredentials googleCredentials = GoogleCredentialsHelper.GetCredentials;
@@ -65,6 +65,19 @@
             var taskLists = JsonConvert.DeserializeObject<TaskLists>(response.Content.ReadAsStringAsync().Result);
 
             return (taskLists?.Items ?? Enumerable.Empty<TaskList>()).ToList();
+        }
+
+        /// <summary>
+        /// Gets all tasks from a task list.
+        /// </summary>
+        /// <param name="taskListId">The task list identifier.</param>
+        /// <returns>A list of all tasks in a task list.</returns>
+        public async System.Threading.Tasks.Task<List<Task>> GetAllTasksFromTaskList(string taskListId)
+        {
+            var response = await this.GetUrlWithAccessTokenAsync(this.tasksUrl + taskListId + "/tasks");
+            var tasks = JsonConvert.DeserializeObject<Tasks>(response.Content.ReadAsStringAsync().Result);
+
+            return (tasks?.Items ?? Enumerable.Empty<Task>()).ToList();
         }
 
         /// <summary>

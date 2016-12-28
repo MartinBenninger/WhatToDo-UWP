@@ -1,33 +1,34 @@
 ﻿namespace WhatToDo.Views
 {
     using System;
-    using System.Collections.Generic;
     using DAL.IRepositories;
     using Google.Apis.Tasks.v1.Data;
-    using Helpers;
-    using Models;
     using ViewModels;
     using Xamarin.Forms;
+    using XLabs.Ioc;
 
     /// <summary>
-    /// The task list page.
+    /// The page for listing all task lists.
     /// </summary>
     /// <seealso cref="WhatToDo.Views.BaseContentPage"/>
     public partial class Tasklists : BaseContentPage
     {
         private readonly ITasklistRepository tasklistRepository;
+        private readonly ITaskRepository taskRepository;
         private readonly IUserRepository userRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tasklists"/> class.
         /// </summary>
         /// <param name="tasklistRepository">The DI injected task list repository.</param>
+        /// <param name="taskRepository">The DI injected task repository.</param>
         /// <param name="userRepository">The DI injected user repository.</param>
-        public Tasklists(ITasklistRepository tasklistRepository, IUserRepository userRepository)
+        public Tasklists(ITasklistRepository tasklistRepository, ITaskRepository taskRepository, IUserRepository userRepository)
         {
             this.InitializeComponent();
 
             this.tasklistRepository = tasklistRepository;
+            this.taskRepository = taskRepository;
             this.userRepository = userRepository;
 
             if (Device.OS == TargetPlatform.Android)
@@ -50,6 +51,23 @@
             this.BindingContext = this.GetTasklistsViewModel();
         }
 
+        /// <summary>
+        /// Called when a task list item is tapped.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">
+        /// The <see cref="ItemTappedEventArgs"/> instance containing the event data.
+        /// </param>
+        private async void OnTaskListItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            await this.Navigation.PushAsync(new Tasks(this.taskRepository, (TaskList)e.Item));
+        }
+
+        /// <summary>
+        /// Called when the logout button is clicked.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
         private async void OnLogoutButtonClicked(object sender, EventArgs args)
         {
             await this.userRepository.Logout();
@@ -60,19 +78,13 @@
         /// <summary>
         /// Gets the task lists view model.
         /// </summary>
-        /// <returns>A model containing a list of tasks or empty if the user is not logged in.</returns>
-        private TasklistsViewModel GetTasklistsViewModel()
+        /// <returns>A model containing a list of task lists.</returns>
+        private TaskListsViewModel GetTasklistsViewModel()
         {
-            var viewModel = new TasklistsViewModel();
-
-            // Only set the model data if the user is logged in.
-            if (!Settings.IsLoggedIn)
-            {
-                return viewModel;
-            }
+            var viewModel = new TaskListsViewModel();
 
             // Get all task lists.
-            viewModel.Tasklists = System.Threading.Tasks.Task.Run(() => this.tasklistRepository.GetAllTasklists()).Result;
+            viewModel.TaskLists = System.Threading.Tasks.Task.Run(() => this.tasklistRepository.GetAllTasklists()).Result;
 
             return viewModel;
         }

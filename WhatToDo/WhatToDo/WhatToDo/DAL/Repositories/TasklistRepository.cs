@@ -1,10 +1,8 @@
 ﻿namespace WhatToDo.DAL.Repositories
 {
-    using System;
     using System.Collections.Generic;
     using Google.Apis.Tasks.v1.Data;
     using IRepositories;
-    using Models;
     using Services.TasksAPI;
 
     /// <summary>

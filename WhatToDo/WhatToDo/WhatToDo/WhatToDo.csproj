@@ -52,17 +52,19 @@
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Models\GoogleCredentials.cs" />
     <Compile Include="Models\GoogleCredentialsRoot.cs" />
-    <Compile Include="Models\Task.cs" />
-    <Compile Include="Models\Tasklist.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\SQLite\LocalDatabase.cs" />
     <Compile Include="Services\TasksAPI\OnlineData.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
-    <Compile Include="ViewModels\TasklistsViewModel.cs" />
+    <Compile Include="ViewModels\TaskListsViewModel.cs" />
+    <Compile Include="ViewModels\TasksViewModel.cs" />
     <Compile Include="Views\BaseContentPage.cs" />
     <Compile Include="Views\Login.cs" />
     <Compile Include="Views\Tasklists.xaml.cs">
       <DependentUpon>Tasklists.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Tasks.xaml.cs">
+      <DependentUpon>Tasks.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Welcome.xaml.cs">
       <DependentUpon>Welcome.xaml</DependentUpon>
@@ -159,12 +161,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Views\Tasklists.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Views\Welcome.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
@@ -174,6 +170,18 @@
     <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
     <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\Tasks.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\Tasklists.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
