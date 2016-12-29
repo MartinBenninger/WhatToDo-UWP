@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Text;
     using Google.Apis.Auth.OAuth2;
     using Google.Apis.Services;
     using Google.Apis.Tasks.v1;
@@ -25,6 +26,35 @@
         private readonly string revokeTokenUrl = "https://accounts.google.com/o/oauth2/revoke";
 
         private readonly GoogleCredentials googleCredentials = GoogleCredentialsHelper.GetCredentials;
+
+        /// <summary>
+        /// Gets all task lists.
+        /// </summary>
+        /// <returns>A list of all task lists.</returns>
+        public async System.Threading.Tasks.Task<List<TaskList>> GetAllTaskLists()
+        {
+            return await this.GetAllPages<TaskList, TaskLists>(this.listsUrl);
+        }
+
+        /// <summary>
+        /// Gets all tasks from a task list.
+        /// </summary>
+        /// <param name="taskListId">The task list identifier.</param>
+        /// <returns>A list of all tasks in a task list.</returns>
+        public async System.Threading.Tasks.Task<List<Task>> GetAllTasksFromTaskList(string taskListId)
+        {
+            return await this.GetAllPages<Task, Tasks>(this.tasksUrl + taskListId + "/tasks");
+        }
+
+        /// <summary>
+        /// Updates the task list.
+        /// </summary>
+        /// <param name="taskList">The task list to update.</param>
+        /// <returns>An awaitable System.Threading.Tasks.Task.</returns>
+        public async System.Threading.Tasks.Task UpdateTaskList(TaskList taskList)
+        {
+            await this.RequestWithAccessTokenAsync((u, c) => new HttpClient().PutAsync(u, c), taskList.SelfLink, string.Empty, new StringContent(JsonConvert.SerializeObject(taskList), Encoding.UTF8, "application/json"));
+        }
 
         /// <summary>
         /// Gets a new access token using the refresh token.
@@ -51,46 +81,30 @@
         /// Revokes the refresh token.
         /// </summary>
         /// <param name="refreshToken">The refresh token to revoke.</param>
-        /// <returns>Null</returns>
+        /// <returns>An awaitable System.Threading.Tasks.Task.</returns>
         public async System.Threading.Tasks.Task RevokeRefreshToken(string refreshToken)
         {
             await new HttpClient().GetAsync(new Uri(this.revokeTokenUrl + "?token=" + refreshToken));
         }
 
         /// <summary>
-        /// Gets all task lists.
+        /// Creates a request using the provided method, url, parameters (optional), and content
+        /// (optional). The access token is added to the request. If the request is unauthorized the
+        /// access token is refreshed and the request is made again.
         /// </summary>
-        /// <returns>A list of all task lists.</returns>
-        public async System.Threading.Tasks.Task<List<TaskList>> GetAllTaskLists()
-        {
-            return await this.GetAllPages<TaskList, TaskLists>(this.listsUrl);
-        }
-
-        /// <summary>
-        /// Gets all tasks from a task list.
-        /// </summary>
-        /// <param name="taskListId">The task list identifier.</param>
-        /// <returns>A list of all tasks in a task list.</returns>
-        public async System.Threading.Tasks.Task<List<Task>> GetAllTasksFromTaskList(string taskListId)
-        {
-            return await this.GetAllPages<Task, Tasks>(this.tasksUrl + taskListId + "/tasks");
-        }
-
-        /// <summary>
-        /// Gets the URL with access token asynchronously. Refreshes the access token if needed.
-        /// </summary>
-        /// <param name="url">The URL to get.</param>
-        /// <param name="queryParameters">Optional query parameters.</param>
+        /// <param name="requestAsync">The asynchronous request method.</param>
+        /// <param name="url">The URL.</param>
+        /// <param name="queryParameters">The query parameters.</param>
+        /// <param name="content">The content (for requests like POST / PUT).</param>
         /// <returns>The HttpResponseMessage.</returns>
-        private async System.Threading.Tasks.Task<HttpResponseMessage> GetUrlWithAccessTokenAsync(string url, string queryParameters = "")
+        private async System.Threading.Tasks.Task<HttpResponseMessage> RequestWithAccessTokenAsync(Func<Uri, HttpContent, System.Threading.Tasks.Task<HttpResponseMessage>> requestAsync, string url, string queryParameters = "", HttpContent content = null)
         {
-            var httpClient = new HttpClient();
-            var response = await httpClient.GetAsync(new Uri(url + "?access_token=" + Settings.AccessToken + queryParameters));
+            var response = await requestAsync(new Uri(url + "?access_token=" + Settings.AccessToken + queryParameters), content);
 
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 Settings.AccessToken = await this.RefreshAccessToken(Settings.RefreshToken);
-                response = await httpClient.GetAsync(new Uri(url + "?access_token=" + Settings.AccessToken + queryParameters));
+                response = await requestAsync(new Uri(url + "?access_token=" + Settings.AccessToken + queryParameters), content);
             }
 
             return response;
@@ -111,10 +125,11 @@
             TS itemsPage = null;
             string nextPageToken = null;
             HttpResponseMessage response = null;
+            var httpClient = new HttpClient();
 
             do
             {
-                response = await this.GetUrlWithAccessTokenAsync(url, "&maxResults=" + MaxResults + (!string.IsNullOrWhiteSpace(nextPageToken) ? "&pageToken=" + nextPageToken : string.Empty));
+                response = await this.RequestWithAccessTokenAsync((u, c) => httpClient.GetAsync(u), url, "&maxResults=" + MaxResults + (!string.IsNullOrWhiteSpace(nextPageToken) ? "&pageToken=" + nextPageToken : string.Empty));
                 itemsPage = this.GetObjectFromResponse<TS>(response);
                 nextPageToken = ((dynamic)itemsPage)?.NextPageToken;
 

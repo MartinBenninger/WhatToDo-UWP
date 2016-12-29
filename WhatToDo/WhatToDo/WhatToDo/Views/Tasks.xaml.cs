@@ -43,8 +43,8 @@
         /// Called when the back button is clicked.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private async void OnBackButtonClicked(object sender, EventArgs args)
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private async void OnBackButtonClicked(object sender, EventArgs e)
         {
             await this.Navigation.PopAsync();
         }

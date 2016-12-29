@@ -28,7 +28,7 @@
             NavigationHelper.Current.NavigateLoginFailure = this.LoginFailure;
 
             // The root page of your application
-            this.MainPage = new NavigationPage(new Tasklists(Resolver.Resolve<ITasklistRepository>(), Resolver.Resolve<ITaskRepository>(), Resolver.Resolve<IUserRepository>()));
+            this.MainPage = new NavigationPage(new Tasklists(Resolver.Resolve<ITaskListRepository>(), Resolver.Resolve<ITaskRepository>(), Resolver.Resolve<IUserRepository>()));
         }
 
         /// <summary>

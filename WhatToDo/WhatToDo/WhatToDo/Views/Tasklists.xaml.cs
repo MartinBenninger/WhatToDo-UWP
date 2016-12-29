@@ -12,21 +12,21 @@
     /// <seealso cref="WhatToDo.Views.BaseContentPage"/>
     public partial class Tasklists : BaseContentPage
     {
-        private readonly ITasklistRepository tasklistRepository;
+        private readonly ITaskListRepository taskListRepository;
         private readonly ITaskRepository taskRepository;
         private readonly IUserRepository userRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tasklists"/> class.
         /// </summary>
-        /// <param name="tasklistRepository">The DI injected task list repository.</param>
+        /// <param name="taskListRepository">The DI injected task list repository.</param>
         /// <param name="taskRepository">The DI injected task repository.</param>
         /// <param name="userRepository">The DI injected user repository.</param>
-        public Tasklists(ITasklistRepository tasklistRepository, ITaskRepository taskRepository, IUserRepository userRepository)
+        public Tasklists(ITaskListRepository taskListRepository, ITaskRepository taskRepository, IUserRepository userRepository)
         {
             this.InitializeComponent();
 
-            this.tasklistRepository = tasklistRepository;
+            this.taskListRepository = taskListRepository;
             this.taskRepository = taskRepository;
             this.userRepository = userRepository;
 
@@ -63,6 +63,26 @@
         }
 
         /// <summary>
+        /// Called when the menu edit is clicked on the task list page.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private async void OnEditTaskListClicked(object sender, EventArgs e)
+        {
+            await this.Navigation.PushModalAsync(new EditTaskList(this.taskListRepository, (TaskList)((MenuItem)sender).CommandParameter));
+        }
+
+        /// <summary>
+        /// Called when the menu delete is clicked on the task list page.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void OnDeleteTaskListClicked(object sender, EventArgs e)
+        {
+            var menuItem = (MenuItem)sender;
+        }
+
+        /// <summary>
         /// Called when the logout button is clicked.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -83,7 +103,7 @@
             var viewModel = new TaskListsViewModel();
 
             // Get all task lists.
-            viewModel.TaskLists = System.Threading.Tasks.Task.Run(() => this.tasklistRepository.GetAllTasklists()).Result;
+            viewModel.TaskLists = System.Threading.Tasks.Task.Run(() => this.taskListRepository.GetAllTaskLists()).Result;
 
             return viewModel;
         }

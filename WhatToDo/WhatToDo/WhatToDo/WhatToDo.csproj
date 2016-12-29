@@ -39,10 +39,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
-    <Compile Include="DAL\IRepositories\ITasklistRepository.cs" />
+    <Compile Include="DAL\IRepositories\ITaskListRepository.cs" />
     <Compile Include="DAL\IRepositories\ITaskRepository.cs" />
     <Compile Include="DAL\IRepositories\IUserRepository.cs" />
-    <Compile Include="DAL\Repositories\TasklistRepository.cs" />
+    <Compile Include="DAL\Repositories\TaskListRepository.cs" />
     <Compile Include="DAL\Repositories\TaskRepository.cs" />
     <Compile Include="DAL\Repositories\UserRepository.cs" />
     <Compile Include="Helpers\GoogleCredentialsHelper.cs" />
@@ -56,9 +56,13 @@
     <Compile Include="Services\SQLite\LocalDatabase.cs" />
     <Compile Include="Services\TasksAPI\OnlineData.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\EditTaskListViewModel.cs" />
     <Compile Include="ViewModels\TaskListsViewModel.cs" />
     <Compile Include="ViewModels\TasksViewModel.cs" />
     <Compile Include="Views\BaseContentPage.cs" />
+    <Compile Include="Views\EditTaskList.xaml.cs">
+      <DependentUpon>EditTaskList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Login.cs" />
     <Compile Include="Views\Tasklists.xaml.cs">
       <DependentUpon>Tasklists.xaml</DependentUpon>
@@ -181,6 +185,12 @@
     <EmbeddedResource Include="Views\Tasklists.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\EditTaskList.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

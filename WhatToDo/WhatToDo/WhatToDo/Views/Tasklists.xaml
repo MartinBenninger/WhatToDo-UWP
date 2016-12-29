@@ -9,6 +9,10 @@
       <ListView.ItemTemplate>
         <DataTemplate>
           <ViewCell>
+            <ViewCell.ContextActions>
+              <MenuItem Text="Edit" Clicked="OnEditTaskListClicked" CommandParameter="{Binding .}" />
+              <MenuItem Text="Delete" Clicked="OnDeleteTaskListClicked" CommandParameter="{Binding .}" />
+            </ViewCell.ContextActions>
             <StackLayout Padding="15, 5">
               <Label Text="{Binding Title}" />
             </StackLayout>

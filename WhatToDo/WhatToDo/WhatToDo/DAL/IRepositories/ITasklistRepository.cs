@@ -6,12 +6,19 @@
     /// <summary>
     /// The interface for the task list repository class.
     /// </summary>
-    public interface ITasklistRepository
+    public interface ITaskListRepository
     {
         /// <summary>
         /// Gets all task lists.
         /// </summary>
         /// <returns>A list of all task lists.</returns>
-        System.Threading.Tasks.Task<List<TaskList>> GetAllTasklists();
+        System.Threading.Tasks.Task<List<TaskList>> GetAllTaskLists();
+
+        /// <summary>
+        /// Updates the task list.
+        /// </summary>
+        /// <param name="taskList">The task list to update.</param>
+        /// <returns>An awaitable System.Threading.Tasks.Task.</returns>
+        System.Threading.Tasks.Task UpdateTaskList(TaskList taskList);
     }
 }
