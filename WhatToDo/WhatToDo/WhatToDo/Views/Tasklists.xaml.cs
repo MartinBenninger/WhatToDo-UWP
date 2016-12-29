@@ -77,9 +77,9 @@
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void OnDeleteTaskListClicked(object sender, EventArgs e)
+        private async void OnDeleteTaskListClicked(object sender, EventArgs e)
         {
-            var menuItem = (MenuItem)sender;
+            await this.Navigation.PushModalAsync(new DeleteTaskList(this.taskListRepository, (TaskList)((MenuItem)sender).CommandParameter));
         }
 
         /// <summary>

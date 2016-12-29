@@ -20,5 +20,12 @@
         /// <param name="taskList">The task list to update.</param>
         /// <returns>An awaitable System.Threading.Tasks.Task.</returns>
         System.Threading.Tasks.Task UpdateTaskList(TaskList taskList);
+
+        /// <summary>
+        /// Deletes the task list.
+        /// </summary>
+        /// <param name="taskList">The task list to delete.</param>
+        /// <returns>An awaitable System.Threading.Tasks.Task.</returns>
+        System.Threading.Tasks.Task DeleteTaskList(TaskList taskList);
     }
 }

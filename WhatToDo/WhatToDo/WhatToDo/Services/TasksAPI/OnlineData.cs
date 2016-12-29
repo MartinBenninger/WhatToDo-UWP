@@ -57,6 +57,16 @@
         }
 
         /// <summary>
+        /// Deletes the task list.
+        /// </summary>
+        /// <param name="taskList">The task list to delete.</param>
+        /// <returns>An awaitable System.Threading.Tasks.Task.</returns>
+        public async System.Threading.Tasks.Task DeleteTaskList(TaskList taskList)
+        {
+            await this.RequestWithAccessTokenAsync((u, c) => new HttpClient().DeleteAsync(u), taskList.SelfLink);
+        }
+
+        /// <summary>
         /// Gets a new access token using the refresh token.
         /// </summary>
         /// <param name="refreshToken">The refresh token.</param>
