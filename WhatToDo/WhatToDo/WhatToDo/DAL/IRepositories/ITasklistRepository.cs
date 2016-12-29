@@ -15,6 +15,13 @@
         System.Threading.Tasks.Task<List<TaskList>> GetAllTaskLists();
 
         /// <summary>
+        /// Inserts the task list.
+        /// </summary>
+        /// <param name="taskList">The task list to insert.</param>
+        /// <returns>An awaitable System.Threading.Tasks.Task.</returns>
+        System.Threading.Tasks.Task InsertTaskList(TaskList taskList);
+
+        /// <summary>
         /// Updates the task list.
         /// </summary>
         /// <param name="taskList">The task list to update.</param>

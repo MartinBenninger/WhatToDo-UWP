@@ -83,6 +83,16 @@
         }
 
         /// <summary>
+        /// Called when the new button is clicked on the task list page.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private async void OnNewTaskListButtonClicked(object sender, EventArgs e)
+        {
+            await this.Navigation.PushModalAsync(new NewTaskList(this.taskListRepository));
+        }
+
+        /// <summary>
         /// Called when the logout button is clicked.
         /// </summary>
         /// <param name="sender">The sender.</param>

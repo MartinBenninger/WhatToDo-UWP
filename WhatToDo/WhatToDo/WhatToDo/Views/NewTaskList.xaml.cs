@@ -6,25 +6,22 @@
     using ViewModels;
 
     /// <summary>
-    /// The page for editing a task list.
+    /// The page for creating a new task list.
     /// </summary>
     /// <seealso cref="WhatToDo.Views.BaseContentPage"/>
-    public partial class EditTaskList : BaseContentPage
+    public partial class NewTaskList : BaseContentPage
     {
         private readonly ITaskListRepository taskListRepository;
-        private readonly TaskList taskList;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EditTaskList"/> class.
+        /// Initializes a new instance of the <see cref="NewTaskList"/> class.
         /// </summary>
-        /// <param name="taskListRepository">The DI injected task list repository.</param>
-        /// <param name="taskList">The task list.</param>
-        public EditTaskList(ITaskListRepository taskListRepository, TaskList taskList)
+        /// <param name="taskListRepository">The task list repository.</param>
+        public NewTaskList(ITaskListRepository taskListRepository)
         {
             this.InitializeComponent();
 
             this.taskListRepository = taskListRepository;
-            this.taskList = taskList;
         }
 
         /// <summary>
@@ -36,26 +33,26 @@
         {
             base.OnAppearing();
 
-            this.BindingContext = this.GetEditTaskListViewModel();
+            this.BindingContext = this.GetNewTaskListViewModel();
             this.newTaskListName.Focus();
         }
 
         /// <summary>
-        /// Called when the save button is clicked on the edit task list page.
+        /// Called when the save button is clicked on the new task list page.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private async void OnSaveEditTaskListButtonClicked(object sender, EventArgs e)
+        private async void OnSaveNewTaskListButtonClicked(object sender, EventArgs e)
         {
-            await this.SaveNewTaskListName();
+            await this.SaveNewTaskList();
         }
 
         /// <summary>
-        /// Called when the cancel button is clicked on the edit task list page.
+        /// Called when the cancel button is clicked on the new task list page.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private async void OnCancelEditTaskListButtonClicked(object sender, EventArgs e)
+        private async void OnCancelNewTaskListButtonClicked(object sender, EventArgs e)
         {
             await this.Navigation.PopModalAsync();
         }
@@ -67,19 +64,20 @@
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private async void OnNewTaskListNameCompleted(object sender, EventArgs e)
         {
-            await this.SaveNewTaskListName();
+            await this.SaveNewTaskList();
         }
 
         /// <summary>
         /// Saves the new name of the task list and returns to the task list page.
         /// </summary>
         /// <returns>An awaitable System.Threading.Tasks.Task.</returns>
-        private async System.Threading.Tasks.Task SaveNewTaskListName()
+        private async System.Threading.Tasks.Task SaveNewTaskList()
         {
             this.newTaskListName.IsEnabled = false;
-            this.taskList.Title = this.newTaskListName.Text;
+            var taskList = new TaskList();
+            taskList.Title = this.newTaskListName.Text;
 
-            await this.taskListRepository.UpdateTaskList(this.taskList);
+            await this.taskListRepository.InsertTaskList(taskList);
 
             await this.Navigation.PopModalAsync();
         }
@@ -88,11 +86,11 @@
         /// Gets the edit task list view model.
         /// </summary>
         /// <returns>A model containing a task list.</returns>
-        private EditTaskListViewModel GetEditTaskListViewModel()
+        private BaseViewModel GetNewTaskListViewModel()
         {
-            var viewModel = new EditTaskListViewModel();
+            var viewModel = new BaseViewModel();
 
-            viewModel.TaskList = this.taskList;
+            viewModel.Title = "New task list";
 
             return viewModel;
         }

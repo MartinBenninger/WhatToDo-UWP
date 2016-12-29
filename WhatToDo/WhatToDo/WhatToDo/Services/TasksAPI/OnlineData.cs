@@ -37,13 +37,13 @@
         }
 
         /// <summary>
-        /// Gets all tasks from a task list.
+        /// Inserts the task list.
         /// </summary>
-        /// <param name="taskListId">The task list identifier.</param>
-        /// <returns>A list of all tasks in a task list.</returns>
-        public async System.Threading.Tasks.Task<List<Task>> GetAllTasksFromTaskList(string taskListId)
+        /// <param name="taskList">The task list to insert.</param>
+        /// <returns>An awaitable System.Threading.Tasks.Task.</returns>
+        public async System.Threading.Tasks.Task InsertTaskList(TaskList taskList)
         {
-            return await this.GetAllPages<Task, Tasks>(this.tasksUrl + taskListId + "/tasks");
+            await this.RequestWithAccessTokenAsync((u, c) => new HttpClient().PostAsync(u, c), this.listsUrl, string.Empty, this.ConvertObjectToJsonStringContent(taskList));
         }
 
         /// <summary>
@@ -53,7 +53,7 @@
         /// <returns>An awaitable System.Threading.Tasks.Task.</returns>
         public async System.Threading.Tasks.Task UpdateTaskList(TaskList taskList)
         {
-            await this.RequestWithAccessTokenAsync((u, c) => new HttpClient().PutAsync(u, c), taskList.SelfLink, string.Empty, new StringContent(JsonConvert.SerializeObject(taskList), Encoding.UTF8, "application/json"));
+            await this.RequestWithAccessTokenAsync((u, c) => new HttpClient().PutAsync(u, c), taskList.SelfLink, string.Empty, this.ConvertObjectToJsonStringContent(taskList));
         }
 
         /// <summary>
@@ -64,6 +64,16 @@
         public async System.Threading.Tasks.Task DeleteTaskList(TaskList taskList)
         {
             await this.RequestWithAccessTokenAsync((u, c) => new HttpClient().DeleteAsync(u), taskList.SelfLink);
+        }
+
+        /// <summary>
+        /// Gets all tasks from a task list.
+        /// </summary>
+        /// <param name="taskListId">The task list identifier.</param>
+        /// <returns>A list of all tasks in a task list.</returns>
+        public async System.Threading.Tasks.Task<List<Task>> GetAllTasksFromTaskList(string taskListId)
+        {
+            return await this.GetAllPages<Task, Tasks>(this.tasksUrl + taskListId + "/tasks");
         }
 
         /// <summary>
@@ -162,6 +172,17 @@
         private T GetObjectFromResponse<T>(HttpResponseMessage response)
         {
             return JsonConvert.DeserializeObject<T>(response.Content.ReadAsStringAsync().Result);
+        }
+
+        /// <summary>
+        /// Serializes the object as a json string and returns it as a StringContent object.
+        /// </summary>
+        /// <typeparam name="T">The type of object to convert.</typeparam>
+        /// <param name="item">The object to convert.</param>
+        /// <returns>A StringContent object.</returns>
+        private StringContent ConvertObjectToJsonStringContent<T>(T item)
+        {
+            return new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, "application/json");
         }
     }
 }

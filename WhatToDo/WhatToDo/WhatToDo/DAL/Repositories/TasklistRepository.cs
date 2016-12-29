@@ -24,6 +24,16 @@
         }
 
         /// <summary>
+        /// Inserts the task list.
+        /// </summary>
+        /// <param name="taskList">The task list to insert.</param>
+        /// <returns>An awaitable System.Threading.Tasks.Task.</returns>
+        public async System.Threading.Tasks.Task InsertTaskList(TaskList taskList)
+        {
+            await this.onlineData.InsertTaskList(taskList);
+        }
+
+        /// <summary>
         /// Updates the task list.
         /// </summary>
         /// <param name="taskList">The task list to update.</param>

@@ -20,6 +20,7 @@
         </DataTemplate>
       </ListView.ItemTemplate>
     </ListView>
-    <Button Text="Logout" VerticalOptions="CenterAndExpand" HorizontalOptions="Center" Clicked="OnLogoutButtonClicked"></Button>
+    <Button Text="New List" FontAttributes="Bold" VerticalOptions="CenterAndExpand" HorizontalOptions="Start" Clicked="OnNewTaskListButtonClicked"></Button>
+    <Button Text="Logout" FontAttributes="Bold" VerticalOptions="CenterAndExpand" HorizontalOptions="Center" Clicked="OnLogoutButtonClicked"></Button>
   </StackLayout>
 </local:Views.BaseContentPage>
