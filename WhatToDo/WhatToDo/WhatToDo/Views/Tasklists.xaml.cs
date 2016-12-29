@@ -5,7 +5,6 @@
     using Google.Apis.Tasks.v1.Data;
     using ViewModels;
     using Xamarin.Forms;
-    using XLabs.Ioc;
 
     /// <summary>
     /// The page for listing all task lists.
@@ -35,7 +34,7 @@
             {
                 // Subscribe the login event for android because the OnAppearing event is not called
                 // after PopModalAsync.
-                MessagingCenter.Subscribe<App>(this, "LoggedIn", (sender) => this.BindingContext = this.GetTasklistsViewModel());
+                MessagingCenter.Subscribe<App>(this, "LoggedIn", (sender) => this.BindingContext = this.GetTaskListsViewModel());
             }
         }
 
@@ -48,7 +47,7 @@
         {
             base.OnAppearing();
 
-            this.BindingContext = this.GetTasklistsViewModel();
+            this.BindingContext = this.GetTaskListsViewModel();
         }
 
         /// <summary>
@@ -67,8 +66,8 @@
         /// Called when the logout button is clicked.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private async void OnLogoutButtonClicked(object sender, EventArgs args)
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private async void OnLogoutButtonClicked(object sender, EventArgs e)
         {
             await this.userRepository.Logout();
 
@@ -79,7 +78,7 @@
         /// Gets the task lists view model.
         /// </summary>
         /// <returns>A model containing a list of task lists.</returns>
-        private TaskListsViewModel GetTasklistsViewModel()
+        private TaskListsViewModel GetTaskListsViewModel()
         {
             var viewModel = new TaskListsViewModel();
 
