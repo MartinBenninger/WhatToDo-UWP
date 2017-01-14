@@ -6,22 +6,25 @@
     using ViewModels;
 
     /// <summary>
-    /// The page for creating a new task list.
+    /// The page for creating a new task.
     /// </summary>
     /// <seealso cref="WhatToDo.Views.BaseContentPage"/>
-    public partial class NewTaskList : BaseContentPage
+    public partial class NewTask : BaseContentPage
     {
-        private readonly ITaskListRepository taskListRepository;
+        private readonly ITaskRepository taskRepository;
+        private readonly TaskList taskList;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NewTaskList"/> class.
+        /// Initializes a new instance of the <see cref="NewTask"/> class.
         /// </summary>
-        /// <param name="taskListRepository">The task list repository.</param>
-        public NewTaskList(ITaskListRepository taskListRepository)
+        /// <param name="taskRepository">The task repository.</param>
+        /// <param name="taskList">The task list.</param>
+        public NewTask(ITaskRepository taskRepository, TaskList taskList)
         {
             this.InitializeComponent();
 
-            this.taskListRepository = taskListRepository;
+            this.taskRepository = taskRepository;
+            this.taskList = taskList;
         }
 
         /// <summary>
@@ -33,26 +36,26 @@
         {
             base.OnAppearing();
 
-            this.BindingContext = this.GetNewTaskListViewModel();
-            this.newTaskListName.Focus();
+            this.BindingContext = this.GetNewTaskViewModel();
+            this.newTaskName.Focus();
         }
 
         /// <summary>
-        /// Called when the save button is clicked on the new task list page.
+        /// Called when the save button is clicked on the new task page.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private async void OnSaveNewTaskListButtonClicked(object sender, EventArgs e)
+        private async void OnSaveNewTaskButtonClicked(object sender, EventArgs e)
         {
-            await this.SaveNewTaskList();
+            await this.SaveNewTask();
         }
 
         /// <summary>
-        /// Called when the cancel button is clicked on the new task list page.
+        /// Called when the cancel button is clicked on the new task page.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private async void OnCancelNewTaskListButtonClicked(object sender, EventArgs e)
+        private async void OnCancelNewTaskButtonClicked(object sender, EventArgs e)
         {
             await this.Navigation.PopModalAsync();
         }
@@ -62,35 +65,35 @@
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private async void OnNewTaskListNameCompleted(object sender, EventArgs e)
+        private async void OnNewTaskNameCompleted(object sender, EventArgs e)
         {
-            await this.SaveNewTaskList();
+            await this.SaveNewTask();
         }
 
         /// <summary>
-        /// Saves the new name of the task list and returns to the task list page.
+        /// Saves the new name of the task and returns to the task page.
         /// </summary>
         /// <returns>An awaitable System.Threading.Tasks.Task.</returns>
-        private async System.Threading.Tasks.Task SaveNewTaskList()
+        private async System.Threading.Tasks.Task SaveNewTask()
         {
-            this.newTaskListName.IsEnabled = false;
-            var taskList = new TaskList();
-            taskList.Title = this.newTaskListName.Text;
+            this.newTaskName.IsEnabled = false;
+            var task = new Task();
+            task.Title = this.newTaskName.Text;
 
-            await this.taskListRepository.InsertTaskList(taskList);
+            await this.taskRepository.InsertTask(this.taskList, task);
 
             await this.Navigation.PopModalAsync();
         }
 
         /// <summary>
-        /// Gets the new task list view model.
+        /// Gets the new task view model.
         /// </summary>
-        /// <returns>A model for creating a new task list.</returns>
-        private BaseViewModel GetNewTaskListViewModel()
+        /// <returns>A model for creating a new task.</returns>
+        private BaseViewModel GetNewTaskViewModel()
         {
             var viewModel = new BaseViewModel();
 
-            viewModel.Title = "New task list";
+            viewModel.Title = "New task";
 
             return viewModel;
         }

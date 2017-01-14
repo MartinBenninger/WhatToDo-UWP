@@ -4,6 +4,7 @@
     using DAL.IRepositories;
     using Google.Apis.Tasks.v1.Data;
     using ViewModels;
+    using Xamarin.Forms;
 
     /// <summary>
     /// The page for listing all tasks in a list.
@@ -37,6 +38,36 @@
             base.OnAppearing();
 
             this.BindingContext = this.GetTasksViewModel();
+        }
+
+        /// <summary>
+        /// Called when the menu edit is clicked on the tasks page.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private async void OnEditTaskClicked(object sender, EventArgs e)
+        {
+            await this.Navigation.PushModalAsync(new EditTask(this.taskRepository, this.taskList, (Task)((MenuItem)sender).CommandParameter));
+        }
+
+        /// <summary>
+        /// Called when the menu delete is clicked on the tasks page.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private async void OnDeleteTaskClicked(object sender, EventArgs e)
+        {
+            await this.Navigation.PushModalAsync(new DeleteTask(this.taskRepository, this.taskList, (Task)((MenuItem)sender).CommandParameter));
+        }
+
+        /// <summary>
+        /// Called when the new button is clicked on the tasks page.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private async void OnNewTaskButtonClicked(object sender, EventArgs e)
+        {
+            await this.Navigation.PushModalAsync(new NewTask(this.taskRepository, this.taskList));
         }
 
         /// <summary>

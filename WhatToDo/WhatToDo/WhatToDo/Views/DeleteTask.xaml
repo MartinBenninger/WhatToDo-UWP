@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<local:Views.BaseContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:WhatToDo;assembly=WhatToDo"
+             x:Class="WhatToDo.Views.DeleteTask">
+  <StackLayout Margin="20">
+    <Label Text="{Binding Title}" FontSize="Large" FontAttributes="Bold" VerticalOptions="Start" HorizontalOptions="Center" />
+    <Label VerticalOptions="Start" HorizontalOptions="Start" Margin="0, 20, 0, 0">
+      Are you sure you want to delete this task? This action cannot be undone.
+
+Task to delete:
+    </Label>
+    <Label Text="{Binding Task.Title}" FontAttributes="Bold" VerticalOptions="Start" HorizontalOptions="Start" Margin="0, 20, 0, 0" />
+    <Button Text="Delete" VerticalOptions="Start" HorizontalOptions="Fill" Clicked="OnDeleteDeleteTaskButtonClicked" Margin="0, 20, 0, 0"></Button>
+    <Button Text="Cancel" VerticalOptions="Start" HorizontalOptions="Fill" Clicked="OnCancelDeleteTaskButtonClicked"></Button>
+  </StackLayout>
+</local:Views.BaseContentPage>

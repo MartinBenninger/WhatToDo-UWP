@@ -17,7 +17,7 @@
         }
 
         /// <summary>
-        /// The task list to edit.
+        /// The task list to delete.
         /// </summary>
         public TaskList TaskList { get; set; }
     }

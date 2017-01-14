@@ -23,6 +23,7 @@
 
         private readonly string listsUrl = "https://www.googleapis.com/tasks/v1/users/@me/lists";
         private readonly string tasksUrl = "https://www.googleapis.com/tasks/v1/lists/"; // + taskListId + "/tasks"
+        private readonly string tasksUrlEnd = "/tasks";
         private readonly string revokeTokenUrl = "https://accounts.google.com/o/oauth2/revoke";
 
         private readonly GoogleCredentials googleCredentials = GoogleCredentialsHelper.GetCredentials;
@@ -73,7 +74,48 @@
         /// <returns>A list of all tasks in a task list.</returns>
         public async System.Threading.Tasks.Task<List<Task>> GetAllTasksFromTaskList(string taskListId)
         {
-            return await this.GetAllPages<Task, Tasks>(this.tasksUrl + taskListId + "/tasks");
+            return await this.GetAllPages<Task, Tasks>(this.tasksUrl + taskListId + this.tasksUrlEnd);
+        }
+
+        /// <summary>
+        /// Inserts the task. Only sends the "Title", "Notes", "Status", and "Due" properties.
+        /// </summary>
+        /// <param name="task">The task to insert.</param>
+        /// <param name="taskListId">The task list identifier.</param>
+        /// <returns>An awaitable System.Threading.Tasks.Task.</returns>
+        public async System.Threading.Tasks.Task InsertTask(Task task, string taskListId)
+        {
+            var taskDictionary = new Dictionary<string, object>();
+            taskDictionary.Add("title", task?.Title ?? string.Empty);
+            taskDictionary.Add("notes", task?.Notes ?? string.Empty);
+            taskDictionary.Add("status", task?.Status == "completed" ? "completed" : "needsAction");
+
+            if (task?.Due != null)
+            {
+                taskDictionary.Add("due", task.Due);
+            }
+
+            await this.RequestWithAccessTokenAsync((u, c) => new HttpClient().PostAsync(u, c), this.tasksUrl + taskListId + this.tasksUrlEnd, string.Empty, this.ConvertObjectToJsonStringContent(taskDictionary));
+        }
+
+        /// <summary>
+        /// Updates the task.
+        /// </summary>
+        /// <param name="task">The task to update.</param>
+        /// <returns>An awaitable System.Threading.Tasks.Task.</returns>
+        public async System.Threading.Tasks.Task UpdateTask(Task task)
+        {
+            await this.RequestWithAccessTokenAsync((u, c) => new HttpClient().PutAsync(u, c), task.SelfLink, string.Empty, this.ConvertObjectToJsonStringContent(task));
+        }
+
+        /// <summary>
+        /// Deletes the task.
+        /// </summary>
+        /// <param name="task">The task to delete.</param>
+        /// <returns>An awaitable System.Threading.Tasks.Task.</returns>
+        public async System.Threading.Tasks.Task DeleteTask(Task task)
+        {
+            await this.RequestWithAccessTokenAsync((u, c) => new HttpClient().DeleteAsync(u), task.SelfLink);
         }
 
         /// <summary>
