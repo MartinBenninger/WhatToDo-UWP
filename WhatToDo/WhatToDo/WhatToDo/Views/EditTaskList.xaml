@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<local:Views.BaseContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:WhatToDo;assembly=WhatToDo"
+             x:Class="WhatToDo.Views.EditTaskList">
+  <StackLayout Margin="20">
+    <Label Text="{Binding Title}" FontSize="Large" FontAttributes="Bold" VerticalOptions="Start" HorizontalOptions="Center" />
+    <Label Text="Old Name:" FontAttributes="Bold" VerticalOptions="Start" HorizontalOptions="Start" Margin="0, 20, 0, 0" />
+    <Label Text="{Binding TaskList.Title}" VerticalOptions="Start" HorizontalOptions="Start" />
+    <Label Text="New Name:" FontAttributes="Bold" VerticalOptions="Start" HorizontalOptions="Start" Margin="0, 20, 0, 0" />
+    <Entry x:Name="newTaskListName" Text="{Binding TaskList.Title}" Placeholder="Task list name" Completed="OnNewTaskListNameCompleted" />
+    <Button Text="Save" VerticalOptions="Start" HorizontalOptions="Fill" Clicked="OnSaveEditTaskListButtonClicked" Margin="0, 20, 0, 0"></Button>
+    <Button Text="Cancel" VerticalOptions="Start" HorizontalOptions="Fill" Clicked="OnCancelEditTaskListButtonClicked"></Button>
+  </StackLayout>
+</local:Views.BaseContentPage>

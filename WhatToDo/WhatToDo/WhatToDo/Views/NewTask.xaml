@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<local:Views.BaseContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:WhatToDo;assembly=WhatToDo"
+             x:Class="WhatToDo.Views.NewTask">
+  <StackLayout Margin="20">
+    <Label Text="{Binding Title}" FontSize="Large" FontAttributes="Bold" VerticalOptions="Start" HorizontalOptions="Center" />
+    <Label Text="Create a new task:" FontAttributes="Bold" VerticalOptions="Start" HorizontalOptions="Start" Margin="0, 20, 0, 0" />
+    <Entry x:Name="newTaskName" Placeholder="Task name" Completed="OnNewTaskNameCompleted" />
+    <Button Text="Save" VerticalOptions="Start" HorizontalOptions="Fill" Clicked="OnSaveNewTaskButtonClicked" Margin="0, 20, 0, 0"></Button>
+    <Button Text="Cancel" VerticalOptions="Start" HorizontalOptions="Fill" Clicked="OnCancelNewTaskButtonClicked"></Button>
+  </StackLayout>
+</local:Views.BaseContentPage>

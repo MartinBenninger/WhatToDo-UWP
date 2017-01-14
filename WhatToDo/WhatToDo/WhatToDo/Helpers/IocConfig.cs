@@ -16,7 +16,7 @@
         {
             var resolverContainer = new SimpleContainer();
 
-            resolverContainer.Register<ITasklistRepository>(typeof(TasklistRepository));
+            resolverContainer.Register<ITaskListRepository>(typeof(TaskListRepository));
             resolverContainer.Register<ITaskRepository>(typeof(TaskRepository));
             resolverContainer.Register<IUserRepository>(typeof(UserRepository));
 

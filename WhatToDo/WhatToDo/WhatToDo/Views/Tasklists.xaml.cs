@@ -5,7 +5,6 @@
     using Google.Apis.Tasks.v1.Data;
     using ViewModels;
     using Xamarin.Forms;
-    using XLabs.Ioc;
 
     /// <summary>
     /// The page for listing all task lists.
@@ -13,21 +12,21 @@
     /// <seealso cref="WhatToDo.Views.BaseContentPage"/>
     public partial class Tasklists : BaseContentPage
     {
-        private readonly ITasklistRepository tasklistRepository;
+        private readonly ITaskListRepository taskListRepository;
         private readonly ITaskRepository taskRepository;
         private readonly IUserRepository userRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tasklists"/> class.
         /// </summary>
-        /// <param name="tasklistRepository">The DI injected task list repository.</param>
+        /// <param name="taskListRepository">The DI injected task list repository.</param>
         /// <param name="taskRepository">The DI injected task repository.</param>
         /// <param name="userRepository">The DI injected user repository.</param>
-        public Tasklists(ITasklistRepository tasklistRepository, ITaskRepository taskRepository, IUserRepository userRepository)
+        public Tasklists(ITaskListRepository taskListRepository, ITaskRepository taskRepository, IUserRepository userRepository)
         {
             this.InitializeComponent();
 
-            this.tasklistRepository = tasklistRepository;
+            this.taskListRepository = taskListRepository;
             this.taskRepository = taskRepository;
             this.userRepository = userRepository;
 
@@ -35,7 +34,7 @@
             {
                 // Subscribe the login event for android because the OnAppearing event is not called
                 // after PopModalAsync.
-                MessagingCenter.Subscribe<App>(this, "LoggedIn", (sender) => this.BindingContext = this.GetTasklistsViewModel());
+                MessagingCenter.Subscribe<App>(this, "LoggedIn", (sender) => this.BindingContext = this.GetTaskListsViewModel());
             }
         }
 
@@ -48,7 +47,7 @@
         {
             base.OnAppearing();
 
-            this.BindingContext = this.GetTasklistsViewModel();
+            this.BindingContext = this.GetTaskListsViewModel();
         }
 
         /// <summary>
@@ -64,11 +63,41 @@
         }
 
         /// <summary>
+        /// Called when the menu edit is clicked on the task list page.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private async void OnEditTaskListClicked(object sender, EventArgs e)
+        {
+            await this.Navigation.PushModalAsync(new EditTaskList(this.taskListRepository, (TaskList)((MenuItem)sender).CommandParameter));
+        }
+
+        /// <summary>
+        /// Called when the menu delete is clicked on the task list page.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private async void OnDeleteTaskListClicked(object sender, EventArgs e)
+        {
+            await this.Navigation.PushModalAsync(new DeleteTaskList(this.taskListRepository, (TaskList)((MenuItem)sender).CommandParameter));
+        }
+
+        /// <summary>
+        /// Called when the new button is clicked on the task list page.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private async void OnNewTaskListButtonClicked(object sender, EventArgs e)
+        {
+            await this.Navigation.PushModalAsync(new NewTaskList(this.taskListRepository));
+        }
+
+        /// <summary>
         /// Called when the logout button is clicked.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private async void OnLogoutButtonClicked(object sender, EventArgs args)
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private async void OnLogoutButtonClicked(object sender, EventArgs e)
         {
             await this.userRepository.Logout();
 
@@ -79,12 +108,12 @@
         /// Gets the task lists view model.
         /// </summary>
         /// <returns>A model containing a list of task lists.</returns>
-        private TaskListsViewModel GetTasklistsViewModel()
+        private TaskListsViewModel GetTaskListsViewModel()
         {
             var viewModel = new TaskListsViewModel();
 
             // Get all task lists.
-            viewModel.TaskLists = System.Threading.Tasks.Task.Run(() => this.tasklistRepository.GetAllTasklists()).Result;
+            viewModel.TaskLists = System.Threading.Tasks.Task.Run(() => this.taskListRepository.GetAllTaskLists()).Result;
 
             return viewModel;
         }

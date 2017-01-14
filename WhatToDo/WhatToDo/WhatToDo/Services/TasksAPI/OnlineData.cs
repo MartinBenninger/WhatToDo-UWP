@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Text;
     using Google.Apis.Auth.OAuth2;
     using Google.Apis.Services;
     using Google.Apis.Tasks.v1;
@@ -18,11 +19,104 @@
     /// </summary>
     public class OnlineData
     {
+        private const int MaxResults = 100;
+
         private readonly string listsUrl = "https://www.googleapis.com/tasks/v1/users/@me/lists";
         private readonly string tasksUrl = "https://www.googleapis.com/tasks/v1/lists/"; // + taskListId + "/tasks"
+        private readonly string tasksUrlEnd = "/tasks";
         private readonly string revokeTokenUrl = "https://accounts.google.com/o/oauth2/revoke";
 
         private readonly GoogleCredentials googleCredentials = GoogleCredentialsHelper.GetCredentials;
+
+        /// <summary>
+        /// Gets all task lists.
+        /// </summary>
+        /// <returns>A list of all task lists.</returns>
+        public async System.Threading.Tasks.Task<List<TaskList>> GetAllTaskLists()
+        {
+            return await this.GetAllPages<TaskList, TaskLists>(this.listsUrl);
+        }
+
+        /// <summary>
+        /// Inserts the task list.
+        /// </summary>
+        /// <param name="taskList">The task list to insert.</param>
+        /// <returns>An awaitable System.Threading.Tasks.Task.</returns>
+        public async System.Threading.Tasks.Task InsertTaskList(TaskList taskList)
+        {
+            await this.RequestWithAccessTokenAsync((u, c) => new HttpClient().PostAsync(u, c), this.listsUrl, string.Empty, this.ConvertObjectToJsonStringContent(taskList));
+        }
+
+        /// <summary>
+        /// Updates the task list.
+        /// </summary>
+        /// <param name="taskList">The task list to update.</param>
+        /// <returns>An awaitable System.Threading.Tasks.Task.</returns>
+        public async System.Threading.Tasks.Task UpdateTaskList(TaskList taskList)
+        {
+            await this.RequestWithAccessTokenAsync((u, c) => new HttpClient().PutAsync(u, c), taskList.SelfLink, string.Empty, this.ConvertObjectToJsonStringContent(taskList));
+        }
+
+        /// <summary>
+        /// Deletes the task list.
+        /// </summary>
+        /// <param name="taskList">The task list to delete.</param>
+        /// <returns>An awaitable System.Threading.Tasks.Task.</returns>
+        public async System.Threading.Tasks.Task DeleteTaskList(TaskList taskList)
+        {
+            await this.RequestWithAccessTokenAsync((u, c) => new HttpClient().DeleteAsync(u), taskList.SelfLink);
+        }
+
+        /// <summary>
+        /// Gets all tasks from a task list.
+        /// </summary>
+        /// <param name="taskListId">The task list identifier.</param>
+        /// <returns>A list of all tasks in a task list.</returns>
+        public async System.Threading.Tasks.Task<List<Task>> GetAllTasksFromTaskList(string taskListId)
+        {
+            return await this.GetAllPages<Task, Tasks>(this.tasksUrl + taskListId + this.tasksUrlEnd);
+        }
+
+        /// <summary>
+        /// Inserts the task. Only sends the "Title", "Notes", "Status", and "Due" properties.
+        /// </summary>
+        /// <param name="task">The task to insert.</param>
+        /// <param name="taskListId">The task list identifier.</param>
+        /// <returns>An awaitable System.Threading.Tasks.Task.</returns>
+        public async System.Threading.Tasks.Task InsertTask(Task task, string taskListId)
+        {
+            var taskDictionary = new Dictionary<string, object>();
+            taskDictionary.Add("title", task?.Title ?? string.Empty);
+            taskDictionary.Add("notes", task?.Notes ?? string.Empty);
+            taskDictionary.Add("status", task?.Status == "completed" ? "completed" : "needsAction");
+
+            if (task?.Due != null)
+            {
+                taskDictionary.Add("due", task.Due);
+            }
+
+            await this.RequestWithAccessTokenAsync((u, c) => new HttpClient().PostAsync(u, c), this.tasksUrl + taskListId + this.tasksUrlEnd, string.Empty, this.ConvertObjectToJsonStringContent(taskDictionary));
+        }
+
+        /// <summary>
+        /// Updates the task.
+        /// </summary>
+        /// <param name="task">The task to update.</param>
+        /// <returns>An awaitable System.Threading.Tasks.Task.</returns>
+        public async System.Threading.Tasks.Task UpdateTask(Task task)
+        {
+            await this.RequestWithAccessTokenAsync((u, c) => new HttpClient().PutAsync(u, c), task.SelfLink, string.Empty, this.ConvertObjectToJsonStringContent(task));
+        }
+
+        /// <summary>
+        /// Deletes the task.
+        /// </summary>
+        /// <param name="task">The task to delete.</param>
+        /// <returns>An awaitable System.Threading.Tasks.Task.</returns>
+        public async System.Threading.Tasks.Task DeleteTask(Task task)
+        {
+            await this.RequestWithAccessTokenAsync((u, c) => new HttpClient().DeleteAsync(u), task.SelfLink);
+        }
 
         /// <summary>
         /// Gets a new access token using the refresh token.
@@ -40,7 +134,7 @@
                 { "grant_type", "refresh_token" }
             });
             var response = await httpClient.PostAsync(new Uri(this.googleCredentials.TokenUri), content);
-            var responseDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(response.Content.ReadAsStringAsync().Result);
+            var responseDictionary = this.GetObjectFromResponse<Dictionary<string, string>>(response);
 
             return responseDictionary.ContainsKey("access_token") ? responseDictionary["access_token"] : string.Empty;
         }
@@ -49,54 +143,88 @@
         /// Revokes the refresh token.
         /// </summary>
         /// <param name="refreshToken">The refresh token to revoke.</param>
-        /// <returns>Null</returns>
+        /// <returns>An awaitable System.Threading.Tasks.Task.</returns>
         public async System.Threading.Tasks.Task RevokeRefreshToken(string refreshToken)
         {
             await new HttpClient().GetAsync(new Uri(this.revokeTokenUrl + "?token=" + refreshToken));
         }
 
         /// <summary>
-        /// Gets all task lists.
+        /// Creates a request using the provided method, url, parameters (optional), and content
+        /// (optional). The access token is added to the request. If the request is unauthorized the
+        /// access token is refreshed and the request is made again.
         /// </summary>
-        /// <returns>A list of all task lists.</returns>
-        public async System.Threading.Tasks.Task<List<TaskList>> GetAllTaskLists()
-        {
-            var response = await this.GetUrlWithAccessTokenAsync(this.listsUrl);
-            var taskLists = JsonConvert.DeserializeObject<TaskLists>(response.Content.ReadAsStringAsync().Result);
-
-            return (taskLists?.Items ?? Enumerable.Empty<TaskList>()).ToList();
-        }
-
-        /// <summary>
-        /// Gets all tasks from a task list.
-        /// </summary>
-        /// <param name="taskListId">The task list identifier.</param>
-        /// <returns>A list of all tasks in a task list.</returns>
-        public async System.Threading.Tasks.Task<List<Task>> GetAllTasksFromTaskList(string taskListId)
-        {
-            var response = await this.GetUrlWithAccessTokenAsync(this.tasksUrl + taskListId + "/tasks");
-            var tasks = JsonConvert.DeserializeObject<Tasks>(response.Content.ReadAsStringAsync().Result);
-
-            return (tasks?.Items ?? Enumerable.Empty<Task>()).ToList();
-        }
-
-        /// <summary>
-        /// Gets the URL with access token asynchronously. Refreshes the access token if needed.
-        /// </summary>
-        /// <param name="url">The URL to get.</param>
+        /// <param name="requestAsync">The asynchronous request method.</param>
+        /// <param name="url">The URL.</param>
+        /// <param name="queryParameters">The query parameters.</param>
+        /// <param name="content">The content (for requests like POST / PUT).</param>
         /// <returns>The HttpResponseMessage.</returns>
-        private async System.Threading.Tasks.Task<HttpResponseMessage> GetUrlWithAccessTokenAsync(string url)
+        private async System.Threading.Tasks.Task<HttpResponseMessage> RequestWithAccessTokenAsync(Func<Uri, HttpContent, System.Threading.Tasks.Task<HttpResponseMessage>> requestAsync, string url, string queryParameters = "", HttpContent content = null)
         {
-            var httpClient = new HttpClient();
-            var response = await httpClient.GetAsync(new Uri(url + "?access_token=" + Settings.AccessToken));
+            var response = await requestAsync(new Uri(url + "?access_token=" + Settings.AccessToken + queryParameters), content);
 
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 Settings.AccessToken = await this.RefreshAccessToken(Settings.RefreshToken);
-                response = await httpClient.GetAsync(new Uri(url + "?access_token=" + Settings.AccessToken));
+                response = await requestAsync(new Uri(url + "?access_token=" + Settings.AccessToken + queryParameters), content);
             }
 
             return response;
+        }
+
+        /// <summary>
+        /// Gets all items on all pages.
+        /// </summary>
+        /// <typeparam name="T">The type of the items to get.</typeparam>
+        /// <typeparam name="TS">The type that contains the items to get.</typeparam>
+        /// <param name="url">The URL.</param>
+        /// <returns>A list of items.</returns>
+        private async System.Threading.Tasks.Task<List<T>> GetAllPages<T, TS>(string url)
+             where T : class
+             where TS : class
+        {
+            var itemsList = new List<T>();
+            TS itemsPage = null;
+            string nextPageToken = null;
+            HttpResponseMessage response = null;
+            var httpClient = new HttpClient();
+
+            do
+            {
+                response = await this.RequestWithAccessTokenAsync((u, c) => httpClient.GetAsync(u), url, "&maxResults=" + MaxResults + (!string.IsNullOrWhiteSpace(nextPageToken) ? "&pageToken=" + nextPageToken : string.Empty));
+                itemsPage = this.GetObjectFromResponse<TS>(response);
+                nextPageToken = ((dynamic)itemsPage)?.NextPageToken;
+
+                if (itemsPage != null && ((dynamic)itemsPage).Items != null)
+                {
+                    itemsList.AddRange(((dynamic)itemsPage).Items);
+                }
+            }
+            while (!string.IsNullOrWhiteSpace(nextPageToken));
+
+            return itemsList;
+        }
+
+        /// <summary>
+        /// Gets the deserialized object from response.
+        /// </summary>
+        /// <typeparam name="T">The type of object to get.</typeparam>
+        /// <param name="response">The response.</param>
+        /// <returns>The deserialized object.</returns>
+        private T GetObjectFromResponse<T>(HttpResponseMessage response)
+        {
+            return JsonConvert.DeserializeObject<T>(response.Content.ReadAsStringAsync().Result);
+        }
+
+        /// <summary>
+        /// Serializes the object as a json string and returns it as a StringContent object.
+        /// </summary>
+        /// <typeparam name="T">The type of object to convert.</typeparam>
+        /// <param name="item">The object to convert.</param>
+        /// <returns>A StringContent object.</returns>
+        private StringContent ConvertObjectToJsonStringContent<T>(T item)
+        {
+            return new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, "application/json");
         }
     }
 }
